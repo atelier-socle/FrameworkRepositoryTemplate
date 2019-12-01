@@ -1,0 +1,27 @@
+name: "MyFramework macOS CI"
+
+on: 
+  push:
+    branches: 
+      - master
+  pull_request:
+    branches: 
+      - master
+
+jobs:
+  test:
+    runs-on: macOS-latest
+    env:
+      MINT_PATH: Mint
+    steps:
+      - uses: actions/checkout@v1
+      - uses: actions/cache@v1
+        with:
+          path: Mint
+          key: ${{ runner.os }}-mint-${{ hashFiles('**/Mint/metadata.json') }}
+          restore-keys: |
+            ${{ runner.os }}-mint-
+      - name: Bootstrap
+        run: make first_install
+      - name: iOS - ${{ matrix.destination }}
+        run: set -o pipefail && env NSUnbufferedIO=YES xcodebuild -project "MyFramework.xcodeproj" -scheme "MyFramework_macOS" -destination "platform=macOS" clean test | xcpretty

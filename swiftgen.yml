@@ -1,0 +1,30 @@
+##########
+# Borrow
+##########
+
+ib:
+  - inputs: Sources/Borrow iOS/
+    module: Borrow
+    outputs:
+      - templateName: scenes-swift4
+        output: Sources/Borrow iOS/Supporting Files/SwiftGen/StoryboardScenes.swift
+        params:
+          module: Borrow
+          publicAccess: true
+      - templateName: segues-swift4
+        params:
+          module: Borrow
+          publicAccess: true
+        output: Sources/Borrow iOS/Supporting Files/SwiftGen/StoryboardSegues.swift
+
+xcassets:
+  inputs: [Sources/Borrow iOS/Supporting Files/Assets.xcassets]
+  outputs:
+    - templateName: swift4
+      output: Sources/Borrow iOS/Supporting Files/SwiftGen/Assets.swift
+
+strings:
+  - inputs: Sources/Borrow iOS/Supporting Files/Localizables/en.lproj
+    outputs:
+        templateName: structured-swift4
+        output: Sources/Borrow iOS/Supporting Files/SwiftGen/Localizables.swift

@@ -1,0 +1,95 @@
+name: MyFramework
+
+############
+# Options
+############
+
+options:
+  minimumXcodeGenVersion: 2.10
+  groupSortPosition: top
+  generateEmptyDirectories: true
+  deploymentTarget: 
+    iOS: "13.0"
+    watchOS: "6.0"
+    tvOS: "13.0"
+    macOS: "10.15"
+
+
+############
+# Packages
+############
+
+packages:
+  SwiftyUtils:
+    url: https://github.com/tbaranes/SwiftyUtils
+    from: 5.0.0
+
+  SwiftyBeaver:
+    url: https://github.com/SwiftyBeaver/SwiftyBeaver
+    from: 1.0.0
+
+############
+# Targets
+############
+
+targets:
+
+  # -----------
+  # MyFramework
+  # -----------
+
+  MyFramework:
+    type: framework
+    platform: [iOS, macOS, watchOS, tvOS]
+
+    # settings
+    settings:
+      PRODUCT_BUNDLE_IDENTIFIER: "com.my_framework.MyFramework"
+
+    # scheme
+    scheme:
+      gatherCoverageData: true
+      testTargets:
+        - name: MyFrameworkTests_${platform}
+          parallelizable: true
+          randomExecutionOrder: true
+        
+    # sources
+    sources:
+      - Sources
+      - path: Sources/Supporting Files/MyFramework.h
+        buildPhase: headers
+        headerVisibility: public
+
+    # dependencies
+    dependencies:
+      - package: SwiftyUtils
+      - package: SwiftyBeaver
+
+    # scripts
+    postCompileScripts:
+      # swiftlint
+      - script: mint run swiftlint swiftlint --config .swiftlint.yml
+        name: Swiftlint
+
+  # -----------
+  # MyFrameworkTests
+  # -----------
+
+  MyFrameworkTests:
+    type: bundle.unit-test
+    platform: [iOS, macOS, watchOS, tvOS]
+
+    # sources
+    sources:
+      - Tests
+
+    # dependencies
+    dependencies:
+      - target: MyFramework_${platform}
+
+    # scripts
+    postCompileScripts:
+      # swiftlint
+      - script: mint run swiftlint swiftlint --config .swiftlint.yml
+        name: Swiftlint
